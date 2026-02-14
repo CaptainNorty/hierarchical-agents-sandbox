@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 
 load_dotenv()
 
@@ -9,14 +9,19 @@ def get_weather(city: str) -> str:
     return f"It's 72F and sunny in {city}"
 
 
-agent = create_react_agent(
-    model="anthropic:claude-sonnet-4-5-20250929",
-    tools=[get_weather],
-)
+def main():
+    agent = create_agent(
+        model="anthropic:claude-sonnet-4-5-20250929",
+        tools=[get_weather],
+    )
 
-result = agent.invoke(
-    {"messages": [{"role": "user", "content": "What's the weather in Salt Lake City?"}]}
-)
+    result = agent.invoke(
+        {"messages": [{"role": "user", "content": "What's the weather in Salt Lake City?"}]}
+    )
 
-for msg in result["messages"]:
-    print(f"{msg.type}: {msg.content}")
+    for msg in result["messages"]:
+        print(f"{msg.type}: {msg.content}")
+
+
+if __name__ == "__main__":
+    main()
